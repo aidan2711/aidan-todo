@@ -41,9 +41,7 @@
 </template>
 
 <script>
-import Vue from "vue";
-
-export default Vue.extend({
+export default {
   data() {
     return {
       username: null,
@@ -52,16 +50,22 @@ export default Vue.extend({
   },
   created() {},
   methods: {
-    onSubmit() {
-      this.$store
-        .dispatch("authentication", {
+    async onSubmit() {
+      try {
+        const status = await this.$store.dispatch("authentication", {
           username: this.username,
           password: this.password
-        })
-        .then((status) => {
-          if(status == 200) this.$router.push("/todo");
         });
+        if (status == 200) {
+          this.$toast.success("Login Successful!!!");
+          this.$router.push("/todo");
+        } else {
+          this.$toast.error("Login Failed!!!");
+        }
+      } catch (error) {
+        this.$toast.error("Login Failed!!!");
+      }
     }
   }
-});
+};
 </script>

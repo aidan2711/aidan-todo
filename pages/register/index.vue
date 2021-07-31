@@ -16,6 +16,7 @@
         required
         autofocus
       />
+      <br />
 
       <label for="inputPassword" class="sr-only">Password</label>
       <input
@@ -27,6 +28,8 @@
         name="password"
         required
       />
+      <br />
+
       <label for="inputConfirmPassword" class="sr-only">Confirm Password</label>
       <input
         type="password"
@@ -36,6 +39,8 @@
         name="confirmPassword"
         required
       />
+      <br />
+
       <label for="inputEmail" class="sr-only">E-mail</label>
       <input
         v-model="email"
@@ -45,6 +50,8 @@
         placeholder="E-mail"
         required
       />
+      <br />
+
       <label for="inputFullname" class="sr-only">Full Name</label>
       <input
         v-model="fullname"
@@ -63,11 +70,8 @@
   </body>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import axios from "axios";
-
-export default Vue.extend({
+<script>
+export default {
   data() {
     return {
       username: null,
@@ -79,17 +83,21 @@ export default Vue.extend({
   },
   methods: {
     async submit() {
-      await axios.post(
-        "http://localhost:5000/api/users/register/",
-        {
+      try {
+        const status = await this.$store.dispatch("registerUser", {
           username: this.username,
           password: this.password,
           email: this.email,
-          fullname: this.fullname
+          fullname: this.fullname,
+        });
+        if (status == 200) {
+          this.$toast.success("Login Successful!!!");
+          await this.$router.push("/login");
+        } else {
+          this.$toast.error("Login Failed!!!");
         }
-      );
-      await this.$router.push("/login");
+      } catch (error) {}
     }
   }
-});
+};
 </script>

@@ -57,9 +57,12 @@ export default {
         task: this.task,
         note: this.note
       });
-      console.log(status);
       if (status == 200) {
-        (this.task = null), (this.note = null);
+        this.task = null;
+        this.note = null;
+        this.$toast.success("Add new task success!!!");
+      } else {
+        this.$toast.error("Failed to add task!!!");
       }
     },
     onCancel() {

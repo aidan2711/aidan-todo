@@ -44,17 +44,17 @@
 export default {
   props: ["task"],
   methods: {
-    onEdit() {
-      this.$store.dispatch("updateTask", this.task).then(status => {
-        if (status == 200) {
-        }
-      });
+    async onEdit() {
+      const status = await this.$store.dispatch("updateTask", this.task);
+      if (status == 200) {
+        this.$toast.success("Update success!!!");
+      } else {
+        this.$toast.error("Failed to update!!!");
+      }
     },
     onCancel() {
-      this.$store.dispatch("selectTask", null).then(status => {
-        if (status == 200) {
-        }
-      });
+      this.$store.commit("selectTask", null);
+      this.$router.push("/todo");
     }
   }
 };

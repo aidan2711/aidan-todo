@@ -51,17 +51,35 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    "vue-toastification/nuxt",
+
+    // You can also pass plugin options
+    ["vue-toastification/nuxt", {
+      timeout: 700,
+      draggable: true
+    }]
   ],
+  toast: {
+    timeout: 700,
+    closeOnClick: true
+  },
 
   axios: {
-    baseURL: 'http://localhost:5000'
+    baseURL: 'http://localhost:5000/api/'
   },
-
+  
   auth: {
-    
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: 'login', method: 'post', propertyName: 'data.token' },
+          user: { url: 'me', method: 'get', propertyName: 'data' },
+          logout: false
+        }
+      }
+    }
   },
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

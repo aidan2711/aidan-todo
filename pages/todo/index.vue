@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  // middleware: "auth",
+  middleware: "authenticate",
   computed: {
     selected() {
       return this.$store.getters.taskSelected;

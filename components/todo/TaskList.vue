@@ -8,8 +8,8 @@
           </td>
         </tr>
         <tr v-else-if="$fetchState.error">
-          <td colSpan="{3}" class="loading">
-            Loading...
+          <td colSpan="{3}">
+            Failed to load data
           </td>
         </tr>
         <div v-else>
@@ -28,17 +28,17 @@ export default {
     };
   },
   async fetch() {
-    const { data } = await this.$axios.get(`http://localhost:5000/api/tasks`);
-    this.tasks = data;
-    this.$store.dispatch("setTasks", this.tasks);
-  },
+    try {
+      const { data } = await this.$store.dispatch("loadTasks");
+      this.tasks = data;
+    } catch (error) {
+      this.$toast.erroe("Load data failed");
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-
-
-
 .task-list {
   width: 100%;
   padding: 0 10vh;

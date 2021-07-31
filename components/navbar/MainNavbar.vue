@@ -14,7 +14,7 @@
     </button>
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
     <form class="form-inline my-2 my-lg-0">
-      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">
+      <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" @click.prevent="onLogout">
         Logout
       </button>
     </form>
@@ -22,7 +22,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+   methods: {
+    onLogout() {
+      this.$store.commit("logout");
+      this.$router.push("/login")
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped></style>

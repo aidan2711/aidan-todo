@@ -52,23 +52,27 @@ export default {
   },
   props: ["task"],
   methods: {
-    onChangeStatus() {
-      this.$store.dispatch("changeStatusTask", this.task._id).then(status => {
-        if (status == 200) {
-        }
-      });
+    async onChangeStatus() {
+      const status = await this.$store.dispatch(
+        "changeStatusTask",
+        this.task._id
+      );
+      if(status == 200) {
+        this.$toast.success('Update success!!!');
+      } else {
+         this.$toast.error('Failed to update!!!');
+      }
     },
-    onDelete() {
-      this.$store.dispatch("deleteTask", this.task._id).then(status => {
-        if (status == 200) {
-        }
-      });
+    async onDelete() {
+      const status = await this.$store.dispatch("deleteTask", this.task._id);
+       if(status == 200) {
+        this.$toast.success('Delete task success!!!');
+      } else {
+         this.$toast.error('Failed to delete!!!');
+      }
     },
     onEdit() {
-      this.$store.dispatch("selectTask", this.task).then(status => {
-        if (status == 200) {
-        }
-      });
+      this.$store.dispatch("selectTask", this.task);
     }
   }
 };
