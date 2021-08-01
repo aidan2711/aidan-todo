@@ -53,22 +53,26 @@ export default {
   props: ["task"],
   methods: {
     async onChangeStatus() {
-      const status = await this.$store.dispatch(
-        "changeStatusTask",
-        this.task._id
-      );
-      if(status == 200) {
-        this.$toast.success('Update success!!!');
-      } else {
-         this.$toast.error('Failed to update!!!');
+      try {
+        const status = await this.$store.dispatch(
+          "changeStatusTask",
+          this.task._id
+        );
+        if (status == 200) {
+          this.$toast.success("Update success!!!");
+        } else {
+          this.$toast.error("Failed to update!!!");
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
     async onDelete() {
       const status = await this.$store.dispatch("deleteTask", this.task._id);
-       if(status == 200) {
-        this.$toast.success('Delete task success!!!');
+      if (status == 200) {
+        this.$toast.success("Delete task success!!!");
       } else {
-         this.$toast.error('Failed to delete!!!');
+        this.$toast.error("Failed to delete!!!");
       }
     },
     onEdit() {

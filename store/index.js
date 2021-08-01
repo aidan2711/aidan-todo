@@ -1,17 +1,19 @@
 import Vuex from "vuex";
+import jwt_decode from "jwt-decode";
 const createStore = () => {
   return new Vuex.Store({
     state: {
       tasks: [],
-      authToken: null,
+      userInfo: {},
       taskSelected: null
     },
     mutations: {
-      setToken(state, payload) {
+      updateUserInfo(state, payload) {
         const newState = {
           ...state,
-          authToken: payload
+          userInfo: payload
         };
+        console.log(newState);
         return newState;
       },
       logout() {
@@ -26,15 +28,13 @@ const createStore = () => {
       loadTasks(state, payload) {
         state.tasks = payload.data;
         console.log(state.tasks);
-
       },
       selectTask(state, payload) {
         state.taskSelected = payload;
       },
       createTask(state, payload) {
-        const { _id, task, note, complete, created_date, deadline } = payload;
+        console.log(payload);
         state.tasks.push(payload);
-        console.log(state.tasks);
       },
       updateTask(state, taskUpdated) {
         const index = state.tasks.findIndex(
@@ -42,6 +42,7 @@ const createStore = () => {
         );
         if (index !== -1) {
           state.tasks.splice(index, 1, taskUpdated);
+          state.taskSelected = null;
         }
       },
       changeStatusTask(state, id) {
@@ -53,22 +54,25 @@ const createStore = () => {
       deleteTask(state, id) {
         const index = state.tasks.findIndex(task => task._id === id);
         if (index !== -1) {
-           state.tasks.splice(index, 1);
+          state.tasks.splice(index, 1);
         }
       }
     },
     actions: {
       loadTasks(vuexContext) {
-        return this.$axios.get("tasks").then(res => {
-          vuexContext.commit("loadTasks", res);
-          return res;
-        });
+        return this.$axios
+          .get(`tasks/userId=${localStorage.getItem("userId")}`)
+          .then(res => {
+            vuexContext.commit("loadTasks", res);
+            return res;
+          });
       },
       selectTask(vuexContext, payload) {
         vuexContext.commit("selectTask", payload);
       },
       createTask(vuexContext, payload) {
         return this.$axios.post("tasks", payload).then(res => {
+          console.log(res);
           vuexContext.commit("createTask", res.data);
           return res.status;
         });
@@ -95,9 +99,14 @@ const createStore = () => {
       },
       authentication(vuexContext, payload) {
         return this.$axios.post("auth", payload).then(res => {
-          localStorage.setItem("authToken", res.data["access-token"]);
-          vuexContext.commit("setToken", res.data["access-token"]);
+          const { user } = jwt_decode(res.data["access-token"]);
+          vuexContext.commit("updateUserInfo", {
+            token: res.data["access-token"],
+            user
+          });
           this.$auth.isLoggedIn = true;
+          localStorage.setItem("authToken", res.data["access-token"]);
+          localStorage.setItem("userId", user._id);
           return res.status;
         });
       },

@@ -55,7 +55,8 @@ export default {
     async onSubmit() {
       const status = await this.$store.dispatch("createTask", {
         task: this.task,
-        note: this.note
+        note: this.note,
+        created_by: localStorage.getItem('userId')
       });
       if (status == 200) {
         this.task = null;
