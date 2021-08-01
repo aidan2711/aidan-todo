@@ -48,6 +48,7 @@ export default {
       const status = await this.$store.dispatch("updateTask", this.task);
       if (status == 200) {
         this.$toast.success("Update success!!!");
+        this.$store.commit("selectTask", null);
       } else {
         this.$toast.error("Failed to update!!!");
       }

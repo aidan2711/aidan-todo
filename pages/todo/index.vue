@@ -8,10 +8,6 @@
       </header>
       <div v-if="selected"><UpdateTask :task="selected" /></div>
       <div v-else><CreateTask /></div>
-      <!-- <SearchTask /> -->
-      <!-- {selectedTask === null ? <CreateTask /> : <UpdateTask task={selectedTask} />} -->
-
-      <!-- <HomeNavigation /> -->
       <TaskList />
     </div>
   </div>

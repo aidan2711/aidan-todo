@@ -24,36 +24,37 @@ const createStore = () => {
         return newState;
       },
       loadTasks(state, payload) {
-        state.tasks = payload;
+        state.tasks = payload.data;
+        console.log(state.tasks);
+
       },
       selectTask(state, payload) {
         state.taskSelected = payload;
       },
       createTask(state, payload) {
-        return state.tasks.push(payload);
+        const { _id, task, note, complete, created_date, deadline } = payload;
+        state.tasks.push(payload);
+        console.log(state.tasks);
       },
       updateTask(state, taskUpdated) {
         const index = state.tasks.findIndex(
           task => task._id === taskUpdated._id
         );
         if (index !== -1) {
-          return state.tasks.splice(index, 1, taskUpdated);
+          state.tasks.splice(index, 1, taskUpdated);
         }
       },
-      changeStatusTask(state, taskUpdated) {
-        const index = state.tasks.findIndex(
-          task => task._id === taskUpdated._id
-        );
+      changeStatusTask(state, id) {
+        const index = state.tasks.findIndex(task => task._id === id);
         if (index !== -1) {
-          return state.tasks.splice(index, 1, taskUpdated);
+          state.tasks = state.tasks.splice(index, 1, taskUpdated);
         }
       },
-      deleteTask(state, payload) {
-        const index = state.tasks.findIndex(task => task._id === payload);
+      deleteTask(state, id) {
+        const index = state.tasks.findIndex(task => task._id === id);
         if (index !== -1) {
-          return state.tasks.splice(index, 1);
+           state.tasks.splice(index, 1);
         }
-        return state.tasks.filter(task => task._id !== payload);
       }
     },
     actions: {
@@ -76,12 +77,12 @@ const createStore = () => {
         return this.$axios
           .post(`tasks/id=${payload._id}`, payload)
           .then(res => {
-            vuexContext.commit("updateTask", payload);
+            vuexContext.commit("updateTask", res.data);
             return res.status;
           });
       },
-      changeStatusTask(vuexContext, payload) {
-        return this.$axios.post(`tasks/status/id=${payload}`).then(res => {
+      changeStatusTask(vuexContext, id) {
+        return this.$axios.post(`tasks/status/id=${id}`).then(res => {
           vuexContext.commit("changeStatusTask", res.data);
           return res.status;
         });
